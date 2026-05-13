@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "frontend" : "next dev",
-    "backend" : "python ocr.py",
+    "frontend": "next dev",
+    "backend": "python ocr.py",
     "dev": "concurrently\"npm run frontend\" \"npm run backend\"",
     "build": "next build",
     "start": "next start",
