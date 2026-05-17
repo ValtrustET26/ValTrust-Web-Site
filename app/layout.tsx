@@ -34,7 +34,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={`${poppins.variable} ${poppins.variable} h-full antialiased`}
+        className={`${poppins.variable} ${poppins.variable} h-full antialiased dark`}
       >
         <body className="min-h-full flex flex-col">{children}</body>
       </html>
