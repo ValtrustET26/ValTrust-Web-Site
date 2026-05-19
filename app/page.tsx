@@ -7,52 +7,56 @@ export default function Home() {
     <div className="flex flex-col bg-zinc-50 font-sans dark:bg-black">
       <LandingNav />
 
-      <section className="relative h-screen w-full overflow-hidden">
+      <section className="relative w-full h-[70vh]  md:h-screen overflow-hidden z-1">
         <Image
-          src={""}
-          alt="landing image"
-          className="object-cover"
-          fill
+          src={"/landing-image.png"}
           priority
+          className="object-fit object-cover"
+          alt={"landing-image"}
+          fill
         />
 
-        <div className="absolute inset-0 bg-black/30" />
-
-        <div className="absolute inset-0 z-10 flex items-center px-6 md:px-12">
-          <div className="max-w-4xl">
-            <h1 className="text-[clamp(2.5rem,8vw,6rem)] font-bold text-white leading-tight">
-              Find Your Dream's <br />
-              Land with <br />
+        <div className="absolute inset-0 flex items-center pt-20 md:pt-0r">
+          <div className="px-6 md:px-16 max-w-3xl">
+            <h1 className="text-white font-bold leading-tight text-5xl sm:text-6xl md:text-7xl">
+              Find Your Dream
+              <br />
+              Land With <br />
               Valtrust
             </h1>
           </div>
         </div>
       </section>
 
-      <section className="bg-wh-main">
-        <div className="flex flex-col bg-wh-main gap-5 w-full text-black justify-center items-center mt-10 ">
-          <div className="flex flex-col bg-white text-black justify-center items-center p-10 w-2/3 h-2/3">
-            <Image src={""} alt={"asdf"} />
-
-            <p>Visualize Homes</p>
-          </div>
-
-          <div className="flex flex-col bg-white text-black justify-center items-center p-10 w-2/3 h-2/3">
-            <Image src={""} alt={"asdf"} />
-
-            <p>Top Listing</p>
-          </div>
-
-          <div className="flex flex-col bg-white text-black justify-center items-center p-10 w-2/3 h-2/3">
-            <Image src={""} alt={"asdf"} />
-
-            <p>Evaluate Land</p>
-          </div>
+      <section className="bg-white w-full flex text-black gap-10 flex-col md:flex-row  items-center justify-center p-5 -mt-30 md:-mt-40 ">
+        <div className="relative w-full md:w-1/3 h-80 rounded-3xl shadow-2xl bg-white p-5 z-12  transition-all duration-300 hover:scale-105">
+          <Image
+            src={"/visualize-homes.png"}
+            alt={"Visualize homes Image"}
+            className="object-contain rounded-lg"
+            fill
+          />
+        </div>
+        <div className="relative w-full md:w-1/3 h-80 rounded-3xl shadow-2xl bg-white p-5 z-12  transition-all duration-300 hover:scale-105">
+          <Image
+            src={"/top-listing.png"}
+            alt={"Top Listing Image"}
+            className="object-contain"
+            fill
+          />
+        </div>
+        <div className="relative w-full md:w-1/3 h-80 rounded-3xl shadow-2xl bg-white p-5 z-12  transition-all duration-300 hover:scale-105">
+          <Image
+            src={"/evaluate-land.png"}
+            alt={"Evaluate Land Image"}
+            className="object-contain"
+            fill
+          />
         </div>
       </section>
 
-      <section className="">
-        <div className="flex flex-col"></div>
+      <section className="bg-white h-screen text-black">
+<div className="text-lg flex items-center w-full mt-10 justify-start p-10 font-bold font-sans">Explore Our Communities</div>
       </section>
     </div>
   );

@@ -38,7 +38,14 @@ export default function LandingNav() {
             className="text-3xl md:hidden w-full justify-end items-center p-5 flex items-center flex-3z-50 z-20"
             onClick={() => setOpen(!open)}
           >
-            {open ? <X size={35} /> : <Menu size={35} className="font-bold " />}
+            {open ? (
+              <X size={35} className="opacity-100 scale-100 translate-y-0" />
+            ) : (
+              <Menu
+                size={35}
+                className="scale-95 pointer-events-none"
+              />
+            )}
           </button>
         </div>
 
@@ -51,7 +58,7 @@ export default function LandingNav() {
       </div>
 
       {open && (
-        <div className=" flex text-black flex-col md:hidden w-50 p-8 fixed bg-wh-main items-center top-5 right-4 gap-20 text-xl z-10 rounded-lg shadow-lg border-black border-solid border-2">
+        <div className=" flex text-black flex-col md:hidden w-50 p-8 fixed bg-wh-main items-center top-5 right-4 gap-20 text-xl z-10 rounded-lg shadow-lg shadow-5xl border-white">
           <div className="flex flex-col items-center text-left ">
             <div className="w-full flex gap-2 justify-center items-center ">
               <House size={30} />
