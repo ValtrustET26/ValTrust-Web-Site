@@ -1,5 +1,7 @@
+'use client'
 import Image from "next/image";
 import LandingNav from "./components/layout/navbars/landingnav";
+import { TypeAnimation } from "react-type-animation";
 
 
 export default function Home() {
@@ -18,12 +20,19 @@ export default function Home() {
 
         <div className="absolute inset-0 flex items-center pt-20 md:pt-0r">
           <div className="px-6 md:px-16 max-w-3xl">
-            <h1 className="text-white font-bold leading-tight text-5xl sm:text-6xl md:text-7xl">
-              Find Your Dream
-              <br />
-              Land With <br />
-              Valtrust
-            </h1>
+            <TypeAnimation
+              sequence={[
+                "Find Your Dream",
+                200,
+                "Find Your Dream Land With",
+                200,
+                "Find Your Dream Land With Valtrust",
+              ]}
+              wrapper="h1"
+              speed={50}
+              repeat={0}
+              className="text-white font-bold leading-tight text-5xl sm:text-6xl md:text-7xl"
+            />
           </div>
         </div>
       </section>
@@ -61,7 +70,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col  w-full items-center justify-center md:flex-row gap-5 ">
-          <div className=" md:w-2/5 w-2/3 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
+          <div className=" w-full md:w-1/2 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
             <div className="relative w-full  h-100 ">
               <Image
                 src={"/landing-image.png"}
@@ -74,7 +83,7 @@ export default function Home() {
             <p className="p-2">Urban Area</p>
           </div>
 
-          <div className="md:w-2/5 w-2/3 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
+          <div className="w-full md:w-1/2 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
             <div className="relative w-full h-100 ">
               <Image
                 src={"/landing-image.png"}
@@ -89,10 +98,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col md:flex-row items-center justify-center w-full bg-white text-black gap-5">
+      <section className="flex flex-col md:flex-row items-center justify-center w-full bg-white text-black gap-5 p-5">
         <div className="w-2/3  flex justify-center items-center flex-col mt-5 gap-5">
-          <h2 className="text-5xl font-bold flex justify-start w-full md:w-2/3 ">About Valtrust</h2>
-          <p className="text-2xl">
+          <h2 className="text-5xl font-bold flex justify-start w-full md:w-2/3 ">
+            About Valtrust
+          </h2>
+          <p className="text-lg md:text-2xl">
             We are a digital platform that <br />
             modernizes property buying, selling, <br />
             and valuation in El Salvador through <br />
@@ -105,8 +116,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="w-full flex gap-10 items-center justify-center">
-          <div className="relative w-1/3 h-50 ">
+        <div className="w-full flex flex-col md:flex-row gap-10 items-center justify-center ">
+          <div className="relative w-4/6 md:w-2/6 h-50 transition-all duration-300 hover:scale-105">
             <Image
               src={"/landing-image.png"}
               alt={"Santa Tecla"}
@@ -114,7 +125,7 @@ export default function Home() {
               className="object-cover rounded-lg"
             />
           </div>
-          <div className="relative w-1/3 h-50 ">
+        <div className="relative w-4/6 md:w-2/6 h-50 transition-all duration-300 hover:scale-105">
             <Image
               src={"/landing-image.png"}
               alt={"Santa Tecla"}
