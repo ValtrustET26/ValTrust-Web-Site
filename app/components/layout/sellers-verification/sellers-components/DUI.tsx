@@ -11,7 +11,7 @@
 import { useRef, useState } from "react";
 
 interface DuiUploadProps {
-  onFileChange?: (file: File) => void;
+  onFileChange?: (files: File[]) => void;
 }
 
 function SpotlightZone({
@@ -59,17 +59,26 @@ export default function DuiUpload({ onFileChange }: DuiUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploaded(true);
-    setFileName(file.name);
-    onFileChange?.(file);
+    if (!e.target.files) return;
+
+  const filesArray = Array.from(e.target.files);
+
+  setUploaded(true);
+
+  setFileName(
+    filesArray.length === 1
+      ? filesArray[0].name
+      : `${filesArray.length} files selected`
+  );
+
+  onFileChange?.(filesArray);
   };
 
   return (
     <>
       <input
         type="file"
+        multiple
         className="hidden"
         ref={inputRef}
         accept="image/*"

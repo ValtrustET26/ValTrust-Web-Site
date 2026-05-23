@@ -128,9 +128,65 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
   const goTo = (next: Stage) => { setStage(next); setAnimKey((k) => k + 1); };
 
   // Yoshua aquí va tu lógica de Tesseract OCR por documento
-  const handleDeedFile        = (file: File) => { /* Tesseract - deed */ };
-  const handleExcerptCertFile = (file: File) => { /* Tesseract - excerptCert */ };
-  const handleDuiFile         = (file: File) => { /* Tesseract - dui */ };
+  //Deed
+  const handleDeedFile        =async (files: File[]) => { try {
+    const data = new FormData();
+
+    files.forEach((file)=> {
+      data.append("images", file);
+    });
+  
+    const res = await fetch("http://127.0.0.1:5000/upload", {
+      method: "POST",
+      body: data,
+    });
+
+    const result = await res.json();
+
+    console.log("DEED OCR:", result.texto_completo);
+
+  } catch (error) {
+    console.error("OCR ERROR:", error);
+  }};//Excerpt OCR
+  const handleExcerptCertFile =async (files: File[]) => { try {
+    const data = new FormData();
+    
+    files.forEach((file) =>{
+      data.append("images", file)
+    });
+
+    const res = await fetch("http://127.0.0.1:5000/upload", {
+      method: "POST",
+      body: data,
+    });
+
+    const result = await res.json();
+
+    console.log("Excerpt OCR:", result.texto_completo);
+
+  } catch (error) {
+    console.error("OCR ERROR:", error);
+  }};
+  //DUI
+  const handleDuiFile         = async(files: File[]) => {  try {
+    const data = new FormData();
+    
+    files.forEach((file) =>{
+      data.append("images", file);
+    });
+
+    const res = await fetch("http://127.0.0.1:5000/upload", {
+      method: "POST",
+      body: data,
+    });
+
+    const result = await res.json();
+
+    console.log("DUI OCR:", result.texto_completo);
+
+  } catch (error) {
+    console.error("OCR ERROR:", error);
+  } };
 
   if (!isOpen) return null;
 

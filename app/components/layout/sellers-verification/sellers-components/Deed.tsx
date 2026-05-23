@@ -6,10 +6,10 @@
 //   onFileChange?: (file: File) => void  - callback opcional para
 //                                          que Tesseract OCR reciba el archivo :P
 
-import { useRef, useState } from "react";
+import { use, useRef, useState } from "react";
 
 interface DeedUploadProps {
-  onFileChange?: (file: File) => void;
+  onFileChange?: (files: File[]) => void;
 }
 
 function SpotlightZone({
@@ -51,22 +51,31 @@ function SpotlightZone({
   );
 }
 
-export default function DeedUpload({ onFileChange }: DeedUploadProps) {
-  const [uploaded, setUploaded] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
+export default function DeedUpload({onFileChange,}: DeedUploadProps){
+  const [uploaded,setUploaded] = useState(false);
+  const [fileName,setFileName] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploaded(true);
-    setFileName(file.name);
-    onFileChange?.(file); // Enviar el archivo al componente padre ( para papi Tesseract OCR)
-  };
+  const handleChange =(e: React.ChangeEvent<HTMLInputElement>) =>{
+    if (!e.target.files) return;
 
+  const filesArray = Array.from(e.target.files);
+
+  setUploaded(true);
+
+  setFileName(
+    filesArray.length === 1
+      ? filesArray[0].name
+      : `${filesArray.length} files selected`
+  );
+
+  onFileChange?.(filesArray);
+
+  }
   return (
     <>
       <input
+        multiple
         type="file"
         className="hidden"
         ref={inputRef}
