@@ -1,6 +1,7 @@
 'use client'
 import Image from "next/image";
 import LandingNav from "./components/layout/navbars/landingnav";
+import Footer from "./components/layout/footer/footer";
 import { TypeAnimation } from "react-type-animation";
 
 
@@ -69,11 +70,11 @@ export default function Home() {
           Explore Our Communities
         </div>
 
-        <div className="flex flex-col  w-full items-center justify-center md:flex-row gap-5 ">
-          <div className=" w-full md:w-1/2 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
+        <div className="flex flex-col  w-full items-center justify-center md:flex-row gap-10 ">
+          <div className=" w-full md:w-3/6  lg:w-2/6 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
             <div className="relative w-full  h-100 ">
               <Image
-                src={"/landing-image.png"}
+                src={"/santa-tecla.png"}
                 alt={"Santa Tecla"}
                 fill
                 className="object-cover rounded-lg"
@@ -83,11 +84,11 @@ export default function Home() {
             <p className="p-2">Urban Area</p>
           </div>
 
-          <div className="w-full md:w-1/2 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
+          <div className="w-full md:w-3/6 lg:w-2/6 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
             <div className="relative w-full h-100 ">
               <Image
-                src={"/landing-image.png"}
-                alt={"Santa Tecla"}
+                src={"/santa-ana.png"}
+                alt={"Santa Ana"}
                 fill
                 className="object-cover rounded-lg"
               />
@@ -98,36 +99,31 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col md:flex-row items-center justify-center w-full bg-white text-black gap-5 p-5">
-        <div className="w-2/3  flex justify-center items-center flex-col mt-5 gap-5">
-          <h2 className="text-5xl font-bold flex justify-start w-full md:w-2/3 ">
+      <section className="flex flex-col md:flex-row items-center justify-center w-full bg-white text-black gap-10 p-10">
+        <div className="w-full lg:w-2/3  flex justify-center items-center flex-col mt-5 gap-5">
+          <h2 className="text-5xl font-bold flex justify-center w-full md:w-2/3 ">
             About Valtrust
           </h2>
-          <p className="text-lg md:text-2xl">
-            We are a digital platform that <br />
-            modernizes property buying, selling, <br />
-            and valuation in El Salvador through <br />
-            AI and real market data. We connect <br />
-            owners, buyers and investors in a <br />
-            secure and transparent environment,
-            <br />
-            making real state decisions easier <br />
-            and smarter.
+          <p className="text-lg md:text-2xl w-full md:w-5/6 sm:p-10">
+            We are a digital platform that modernizes property buying, selling,
+            and valuation in El Salvador through AI and real market data. We
+            connect owners, buyers and investors in a secure and transparent
+            environment, making real state decisions easier and smarter.
           </p>
         </div>
 
-        <div className="w-full flex flex-col md:flex-row gap-10 items-center justify-center ">
+        <div className="w-full flex flex-col md:flex-row gap-10 items-center justify-center">
           <div className="relative w-4/6 md:w-2/6 h-50 transition-all duration-300 hover:scale-105">
             <Image
-              src={"/landing-image.png"}
+              src={"/casa-1.png"}
               alt={"Santa Tecla"}
               fill
               className="object-cover rounded-lg"
             />
           </div>
-        <div className="relative w-4/6 md:w-2/6 h-50 transition-all duration-300 hover:scale-105">
+          <div className="relative w-4/6 md:w-2/6 h-50 transition-all duration-300 hover:scale-105">
             <Image
-              src={"/landing-image.png"}
+              src={"/casa-2.png"}
               alt={"Santa Tecla"}
               fill
               className="object-cover rounded-lg"
@@ -135,6 +131,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Footer/>
     </div>
   );
 }

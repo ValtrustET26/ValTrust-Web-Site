@@ -19,15 +19,15 @@ export default function LandingNav() {
           />
         </div>
 
-        <div className="md:block hidden w-2/3 text-md ">
-          <ul className="flex justify-end items-center gap-40">
-            <li className="hover:bg-zinc-300 p-3 rounded-4xl w-1/9 flex justify-center font-bold">
+        <div className="md:block hidden w-2/3 md:text-md ">
+          <ul className="flex justify-end items-center gap-10">
+            <li className="hover:bg-zinc-300 p-3 rounded-4xl w-2/9 flex justify-center font-bold">
               Home
             </li>
-            <li className="hover:bg-zinc-300 p-3 rounded-4xl w-1/9 flex justify-center font-bold">
+            <li className="hover:bg-zinc-300 p-3 rounded-4xl w-2/9 flex justify-center font-bold">
               About Us
             </li>
-            <li className="hover:bg-zinc-300 p-3 rounded-4xl w-1/9 flex justify-center font-bold">
+            <li className="hover:bg-zinc-300 p-3 rounded-4xl w-2/9 flex justify-center font-bold">
               Premium
             </li>
           </ul>
@@ -76,7 +76,7 @@ export default function LandingNav() {
         </div>
       )}
 
-      <div className="flex md:hidden w-full items-center justify-center p-3 gap-5 text-lg">
+      <div className="flex md:hidden w-full items-center justify-center p-3 gap-5 text-lg md:text-sm">
         <button className="p-5 bg-zinc-200 w-1/3 rounded-lg font-bold">
           Sign In
         </button>
