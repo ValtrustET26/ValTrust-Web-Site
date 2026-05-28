@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Menu, X, House, SwatchBook, Gem, Settings } from "lucide-react";
+import { Menu, X, House, Gem, Settings, Landmark, Activity } from "lucide-react";
 import { useState } from "react";
 import { UserProfile } from "@clerk/nextjs";
 
@@ -32,7 +32,7 @@ export default function SellerNav() {
               Valuation
             </li>
             <li className="hover:bg-zinc-300 p-3 rounded-4xl w-2/9 flex justify-center font-bold">
-              premuin
+              Premium
             </li>
           </ul>
         </div>
@@ -56,10 +56,10 @@ export default function SellerNav() {
           </button>
           <div className="w-1/3 flex">
             <button className="w-1/2 p-3 rounded-lg">
-                    <Settings/>
+              <Settings />
             </button>
             <button>
-                <UserProfile/>
+              <UserProfile />
             </button>
           </div>
         </div>
@@ -73,8 +73,12 @@ export default function SellerNav() {
               <h3 className="w-full flex flex-col">Home</h3>
             </div>
             <div className="w-full flex gap-2 justify-center items-center">
-              <SwatchBook size={30} />
-              <h3 className="w-full flex flex-col">About Us</h3>
+              <Landmark size={30} />
+              <h3 className="w-full flex flex-col">Marketplace</h3>
+            </div>
+            <div className="w-full flex gap-2 justify-center items-center">
+              <Activity size={30} />
+              <h3 className="w-full flex flex-col">Valuation</h3>
             </div>
             <div className="w-full flex gap-2 justify-center items-center">
               <Gem size={30} />
