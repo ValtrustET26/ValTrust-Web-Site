@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 
 import DeedUpload        from "./sellers-components/Deed";
 import ExcerptCertUpload from "./sellers-components/Excerpt";
@@ -31,90 +31,159 @@ const checkSteps = [
 
 // ── Result stage ────────────────────────────────────────────────────
 
-function ResultStage({ onRestart, onBack }: { onRestart: () => void; onBack: () => void }) {
-  const [verifyState, setVerifyState] = useState<VerifyState>("loading");
-  const [progress, setProgress]       = useState(0);
-  const [stepIdx, setStepIdx]         = useState(0);
-  const isVerified = true;
+function ResultStage({
+  verifyState,
+  progress,
+  onRestart,
+  onBack
+}: {
+  verifyState: VerifyState;
+  progress: number;
+  onRestart: () => void;
+  onBack: () => void;
+}) {
 
-  useEffect(() => {
-    const interval     = setInterval(() => { setProgress((p) => { if (p >= 100) { clearInterval(interval); return 100; } return p + 1.5; }); }, 50);
-    const stepTimer    = setInterval(() => { setStepIdx((i) => Math.min(i + 1, checkSteps.length - 1)); }, 700);
-    const resolveTimer = setTimeout(() => {
-      clearInterval(interval); clearInterval(stepTimer);
-      setProgress(100); setStepIdx(checkSteps.length - 1);
-      setTimeout(() => setVerifyState(isVerified ? "verified" : "unverified"), 400);
-    }, 3600);
-    return () => { clearInterval(interval); clearInterval(stepTimer); clearTimeout(resolveTimer); };
-  }, []);
-
-  if (verifyState === "loading") return (
-    <div className="stage-enter flex flex-col items-center text-center gap-6 py-4">
-      <div className="relative w-36 h-24 rounded-xl border-2 border-[var(--gr-main)] bg-gradient-to-br from-[#e8f4f6] to-white overflow-hidden shadow-md">
-        <div className="absolute inset-0 flex items-center justify-center opacity-20">
-          <svg viewBox="0 0 80 56" className="w-28 h-20" fill="none">
-            <rect x="4" y="4" width="72" height="48" rx="6" fill="var(--gr-main)" />
-            <circle cx="22" cy="24" r="8" fill="white" opacity="0.5" />
-            <rect x="36" y="16" width="28" height="3" rx="1.5" fill="white" />
-            <rect x="36" y="23" width="20" height="3" rx="1.5" fill="white" />
-            <rect x="36" y="30" width="24" height="3" rx="1.5" fill="white" />
-          </svg>
-        </div>
-        <div className="scan-line absolute left-0 right-0 h-[2px] bg-[var(--gr-main)] opacity-70 pointer-events-none" />
-        <div className="absolute top-1.5 left-1.5 w-4 h-4 border-t-2 border-l-2 border-[var(--gr-main)] rounded-tl" />
-        <div className="absolute top-1.5 right-1.5 w-4 h-4 border-t-2 border-r-2 border-[var(--gr-main)] rounded-tr" />
-        <div className="absolute bottom-1.5 left-1.5 w-4 h-4 border-b-2 border-l-2 border-[var(--gr-main)] rounded-bl" />
-        <div className="absolute bottom-1.5 right-1.5 w-4 h-4 border-b-2 border-r-2 border-[var(--gr-main)] rounded-br" />
-      </div>
-      <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-1">Analyzing your documents</h2>
-        <p className="text-sm text-gray-400 h-5 transition-all duration-300">{checkSteps[stepIdx]}</p>
-      </div>
-      <div className="w-full max-w-xs">
-        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-full bg-[var(--gr-main)] rounded-full" style={{ width: `${progress}%`, transition: "width 0.1s linear" }} />
-        </div>
-        <p className="text-xs text-gray-400 mt-1 text-right">{Math.min(Math.round(progress), 100)}%</p>
-      </div>
-    </div>
+  const stepIdx = Math.min(
+    Math.floor((progress / 100) * checkSteps.length),
+    checkSteps.length - 1
   );
 
-  if (verifyState === "verified") return (
-    <div className="stage-enter flex flex-col items-center text-center gap-5 py-4">
+  if (verifyState === "loading") {
+    return (
+      <div className="stage-enter flex flex-col items-center text-center gap-6 py-4">
+
+        <div className="relative w-36 h-24 rounded-xl border-2 border-[var(--gr-main)] bg-gradient-to-br from-[#e8f4f6] to-white overflow-hidden shadow-md">
+          <div className="absolute inset-0 flex items-center justify-center opacity-20">
+            <svg viewBox="0 0 80 56" className="w-28 h-20" fill="none">
+              <rect x="4" y="4" width="72" height="48" rx="6" fill="var(--gr-main)" />
+              <circle cx="22" cy="24" r="8" fill="white" opacity="0.5" />
+              <rect x="36" y="16" width="28" height="3" rx="1.5" fill="white" />
+              <rect x="36" y="23" width="20" height="3" rx="1.5" fill="white" />
+              <rect x="36" y="30" width="24" height="3" rx="1.5" fill="white" />
+            </svg>
+          </div>
+
+          <div className="scan-line absolute left-0 right-0 h-[2px] bg-[var(--gr-main)] opacity-70 pointer-events-none" />
+        </div>
+
+        <div>
+          <h2 className="text-xl font-bold text-gray-800 mb-1">
+            Analyzing your documents
+          </h2>
+
+          <p className="text-sm text-gray-400 h-5">
+            {checkSteps[stepIdx]}
+          </p>
+        </div>
+
+        <div className="w-full max-w-xs">
+          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[var(--gr-main)] rounded-full"
+              style={{
+                width: `${progress}%`
+              }}
+            />
+          </div>
+
+          <p className="text-xs text-gray-400 mt-1 text-right">
+            {Math.round(progress)}%
+          </p>
+        </div>
+
+      </div>
+    );
+  }
+
+  if (verifyState === "verified") {
+    return (
+      <div className="stage-enter flex flex-col items-center text-center gap-5 py-4">
       <div className="relative flex items-center justify-center">
         <div className="pulse-ring absolute w-20 h-20 rounded-full bg-green-300" />
+
         <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center pop-in z-10">
-          <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" className="check-draw" />
+          <svg
+            className="w-10 h-10 text-green-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
       </div>
-      <div className="stage-enter stagger-1">
-        <h2 className="text-2xl font-bold text-gray-800">You&apos;re verified!</h2>
-        <p className="text-gray-500 text-sm mt-1">Your documents passed all checks successfully.</p>
+
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800">
+          You're verified!
+        </h2>
+
+        <p className="text-gray-500 text-sm mt-1">
+          Your documents passed all checks successfully.
+        </p>
       </div>
-      <button onClick={onRestart} className="stage-enter stagger-2 mt-1 px-10 py-3 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold rounded-lg shadow-md">
+
+      <button
+        onClick={onRestart}
+        className="mt-1 px-10 py-3 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold rounded-lg shadow-md"
+      >
         Continue →
       </button>
     </div>
-  );
+    );
+  }
 
   return (
     <div className="stage-enter flex flex-col items-center text-center gap-5 py-4">
-      <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center pop-in shake-no">
-        <svg className="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" className="x-draw" />
-        </svg>
-      </div>
-      <div className="stage-enter stagger-1">
-        <h2 className="text-2xl font-bold text-gray-800">Verification failed</h2>
-        <p className="text-gray-500 text-sm mt-1 max-w-xs">We couldn&apos;t verify your documents. Please check they are clear and valid.</p>
-      </div>
-      <div className="flex gap-3 stage-enter stagger-2">
-        <button onClick={onBack} className="px-6 py-3 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-50">← Go back</button>
-        <button onClick={onRestart} className="px-6 py-3 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold rounded-lg shadow-md">Publish anyway</button>
-      </div>
+
+    <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center">
+      <svg
+        className="w-10 h-10 text-red-500"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2.5}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
     </div>
+
+    <div>
+      <h2 className="text-2xl font-bold text-gray-800">
+        Verification failed
+      </h2>
+
+      <p className="text-gray-500 text-sm mt-1 max-w-xs">
+        We couldn't verify your documents. Please check they are clear and valid.
+      </p>
+    </div>
+
+    <div className="flex gap-3">
+      <button
+        onClick={onBack}
+        className="px-6 py-3 border border-gray-300 text-gray-600 font-semibold rounded-lg"
+      >
+        ← Go back
+      </button>
+
+      <button
+        onClick={onRestart}
+        className="px-6 py-3 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold rounded-lg shadow-md"
+      >
+        Publish anyway
+      </button>
+    </div>
+
+  </div>
   );
 }
 
@@ -124,55 +193,73 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
   const [stage, setStage]     = useState<Stage>("info");
   const [animKey, setAnimKey] = useState(0);
 
+  const [deedverified, setDeedVerified] = useState(false)
+  const [extractVerified, setExtracverified] = useState(false)
+  const [duiVerified, setDuiVerified] = useState(false)
+
+   const [verifyState, setVerifyState] =
+    useState<VerifyState>("loading");
+
+  const [ocrProgress, setOcrProgress] =
+    useState(0);
+
+  const [deedFiles, setDeedFiles] = useState<File[]>([]);
+  const [excerptFiles, setExcerptFiles] = useState<File[]>([]);
+  const [duiFiles, setDuiFiles] = useState<File[]>([]);
+
   const currentIndex = steps.findIndex((s) => s.key === stage);
   const goTo = (next: Stage) => { setStage(next); setAnimKey((k) => k + 1); };
 
   // Yoshua aquí va tu lógica de Tesseract OCR por documento
   //Deed
-  const handleDeedFile        =async (files: File[]) => { try {
-    const data = new FormData();
-
-    files.forEach((file)=> {
-      data.append("images", file);
-    });
-  
-    const res = await fetch("http://127.0.0.1:5000/upload", {
-      method: "POST",
-      body: data,
-    });
-
-    const result = await res.json();
-
-    console.log("DEED OCR:", result.texto_completo);
-
-  } catch (error) {
-    console.error("OCR ERROR:", error);
-  }};//Excerpt OCR
-  const handleExcerptCertFile =async (files: File[]) => { try {
-    const data = new FormData();
-    
-    files.forEach((file) =>{
-      data.append("images", file)
-    });
-
-    const res = await fetch("http://127.0.0.1:5000/upload", {
-      method: "POST",
-      body: data,
-    });
-
-    const result = await res.json();
-
-    console.log("Excerpt OCR:", result.texto_completo);
-
-  } catch (error) {
-    console.error("OCR ERROR:", error);
-  }};
+  const handleDeedFile        =async (files: File[]) => { 
+    console.log(files)
+    setDeedFiles(files)
+    setDeedVerified(true)
+  }//Excerpt OCR
+  const handleExcerptCertFile =async (files: File[]) => { 
+    console.log(files)
+    setExcerptFiles(files)
+    setExtracverified(true)
+  };
   //DUI
-  const handleDuiFile         = async(files: File[]) => {  try {
+  const handleDuiFile         = async(files: File[]) => { 
+    console.log(files)
+    setDuiFiles(files)
+    setDuiVerified(true)
+  }
+  const handleSubmit = async () => {
+  console.log("Submit presionado");
+
+  goTo("result");
+  setVerifyState("loading");
+  setOcrProgress(0);
+
+  let currentProgress = 0;
+
+  const progressInterval = setInterval(() => {
+    currentProgress += 1;
+
+    if (currentProgress >= 95) {
+      currentProgress = 95;
+    }
+
+    setOcrProgress(currentProgress);
+  }, 200);
+
+  try {
     const data = new FormData();
-    
-    files.forEach((file) =>{
-      data.append("images", file);
+
+    deedFiles.forEach((file) => {
+      data.append("deed", file);
+    });
+
+    excerptFiles.forEach((file) => {
+      data.append("excerpt", file);
+    });
+
+    duiFiles.forEach((file) => {
+      data.append("dui", file);
     });
 
     const res = await fetch("http://127.0.0.1:5000/upload", {
@@ -182,11 +269,38 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
 
     const result = await res.json();
 
-    console.log("DUI OCR:", result.texto_completo);
+    clearInterval(progressInterval);
+
+    if (!res.ok || !result.success) {
+      setOcrProgress(100);
+      setVerifyState("unverified");
+      return;
+    }
+
+    console.log("DEED");
+    console.log(result.deed.texto);
+
+    console.log("EXCERPT");
+    console.log(result.excerpt.texto);
+
+    console.log("DUI");
+    console.log(result.dui.texto);
+
+    setOcrProgress(100);
+
+    setTimeout(() => {
+      setVerifyState("verified");
+    }, 300);
 
   } catch (error) {
-    console.error("OCR ERROR:", error);
-  } };
+    console.error(error);
+
+    clearInterval(progressInterval);
+
+    setOcrProgress(100);
+    setVerifyState("unverified");
+  }
+};
 
   if (!isOpen) return null;
 
@@ -271,7 +385,7 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
               Upload your <strong>DUI</strong>, verify your <strong>Deed document</strong>, and add the{" "}
               <strong>Extracted certification</strong>. Make sure everything is clear and visible.
             </p>
-            <button onClick={() => goTo("deed")} className="stage-enter stagger-4 mt-2 px-10 py-3 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold rounded-lg shadow-md">
+            <button onClick={() => goTo('deed')} className="stage-enter stagger-4 mt-2 px-10 py-3 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold rounded-lg shadow-md">
               Next
             </button>
           </div>
@@ -287,7 +401,7 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
             </div>
             <div className="flex gap-4 w-full stage-enter stagger-4">
               <button onClick={() => goTo("info")} className="flex-1 border border-gray-300 text-gray-600 font-semibold py-3 rounded-lg hover:bg-gray-50">Back</button>
-              <button onClick={() => goTo("excerptCert")} className="flex-1 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold py-3 rounded-lg shadow-md">Next</button>
+              <button disabled={!deedverified} onClick={()=> goTo('excerptCert')} className="flex-1 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold py-3 rounded-lg shadow-md">Next</button>
             </div>
           </div>
         )}
@@ -302,7 +416,7 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
             </div>
             <div className="flex gap-4 w-full stage-enter stagger-4">
               <button onClick={() => goTo("deed")} className="flex-1 border border-gray-300 text-gray-600 font-semibold py-3 rounded-lg hover:bg-gray-50">Back</button>
-              <button onClick={() => goTo("dui")} className="flex-1 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold py-3 rounded-lg shadow-md">Next</button>
+              <button disabled={!extractVerified} onClick={()=> goTo('dui')} className="flex-1 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold py-3 rounded-lg shadow-md">Next</button>
             </div>
           </div>
         )}
@@ -317,14 +431,14 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
             </div>
             <div className="flex gap-4 w-full stage-enter stagger-4">
               <button onClick={() => goTo("excerptCert")} className="flex-1 border border-gray-300 text-gray-600 font-semibold py-3 rounded-lg hover:bg-gray-50">Back</button>
-              <button onClick={() => goTo("result")} className="flex-1 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold py-3 rounded-lg shadow-md">Submit</button>
+              <button disabled={!duiVerified} onClick={handleSubmit} className="flex-1 bg-gradient-to-r from-[var(--bl-main)] to-[var(--gr-main)] text-white font-semibold py-3 rounded-lg shadow-md">Submit</button>
             </div>
           </div>
         )}
 
         {/* Stage 5: Result */}
         {stage === "result" && (
-          <ResultStage key={animKey} onRestart={() => goTo("info")} onBack={() => goTo("dui")} />
+          <ResultStage key={animKey} verifyState={verifyState} progress={ocrProgress} onRestart={() => goTo("info")} onBack={() => goTo("dui")} />
         )}
 
         {/* Help link */}
