@@ -184,9 +184,8 @@ function ResultStage({
     </div>
 
   </div>
-  );
+);
 }
-
 // ── Principal export ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 export default function Sellers({ isOpen, onClose }: SellersProps) {
@@ -210,6 +209,37 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
   const currentIndex = steps.findIndex((s) => s.key === stage);
   const goTo = (next: Stage) => { setStage(next); setAnimKey((k) => k + 1); };
 
+//verifies duplicates
+  async function getFileHash(file: File) {
+    const buffer = await file.arrayBuffer();
+
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      buffer
+    );
+
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  async function hasDuplicateFile(
+    newFiles: File[],
+    existingFiles: File[]
+  ) {
+    const existingHashes = await Promise.all(
+      existingFiles.map(getFileHash)
+    );
+
+    const newHashes = await Promise.all(
+      newFiles.map(getFileHash)
+    );
+
+    return newHashes.some((hash) =>
+      existingHashes.includes(hash)
+    );
+  }
+
   // Yoshua aquí va tu lógica de Tesseract OCR por documento
   //Deed
   const handleDeedFile        =async (files: File[]) => { 
@@ -218,12 +248,26 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
     setDeedVerified(true)
   }//Excerpt OCR
   const handleExcerptCertFile =async (files: File[]) => { 
+    const duplicates = await hasDuplicateFile(files, deedFiles);
+
+    if(duplicates){
+      alert('This file was already uploaded in Deed.');
+      setExtracverified(false);
+      return
+    }
     console.log(files)
     setExcerptFiles(files)
     setExtracverified(true)
   };
   //DUI
   const handleDuiFile         = async(files: File[]) => { 
+    const duplicateWithExcerpt = await hasDuplicateFile(files, deedFiles);
+    const duplicateWithDeed = await hasDuplicateFile(files, excerptFiles);
+    if(duplicateWithDeed || duplicateWithExcerpt){
+      alert('This file was already uploaded in the others steps.');
+      setDuiVerified(false);
+      return
+    }
     console.log(files)
     setDuiFiles(files)
     setDuiVerified(true)
@@ -261,6 +305,7 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
     duiFiles.forEach((file) => {
       data.append("dui", file);
     });
+
 
     const res = await fetch("http://127.0.0.1:5000/upload", {
       method: "POST",

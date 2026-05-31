@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 import pytesseract
+from pytesseract import Output
 import cv2
 import numpy as np
 from flask_cors import CORS
 from pdf2image import convert_from_bytes
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -13,10 +15,31 @@ def home():
     return "Servidor funcionando"
 
 
-def blurry_image(image, threshold=100):
+def blurry_image(image, threshold=150):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     score = cv2.Laplacian(gray, cv2.CV_64F).var()
     return score < threshold, score
+
+def get_ocr_confidence(gray):
+    data = pytesseract.image_to_data(
+        gray,
+        lang='spa+eng',
+        output_type=Output.DICT
+    )
+    confidences = []
+
+    for conf in data['conf']:
+        try:
+            conf = float(conf)
+
+            if conf > 0:
+                confidences.append(conf)
+        except:
+            pass
+
+    if len(confidences) ==0:
+        return 0
+    return sum(confidences) / len(confidences)
 
 
 def process_file(file):
@@ -42,6 +65,7 @@ def process_file(file):
             img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
             blurry, score = blurry_image(img)
+            print('blur score', score)
 
             if blurry:
                 raise Exception(
@@ -57,9 +81,19 @@ def process_file(file):
             )
             print("Terminando OCR PDF")
 
-            if len(text.strip()) < 1:
+            confidence = get_ocr_confidence(gray)
+            
+            texto_limpio = re.sub(r'[^A-Za-zÁÉÍÓÚáéíóúÑñ0-9]', '', text)
+            print('OCR confidence', confidence)
+            print('readable chars', len(texto_limpio))
+
+            if len(texto_limpio) < 100:
                 raise Exception(
-                    f"{file.filename} is not clear"
+                    f"{file.filename} contains insufficient readable chars"
+                )
+            if confidence < 80:
+                raise Exception(
+                    f'{file.filename} OCR confidence is too low'
                 )
 
             texto_documento += text + "\n"
@@ -80,6 +114,7 @@ def process_file(file):
             )
 
         blurry, score = blurry_image(img)
+        print('blur score', score)
 
         if blurry:
             raise Exception(
@@ -98,9 +133,21 @@ def process_file(file):
         )
         print("Terminando OCR Imagen")
 
-        if len(texto_documento.strip()) < 1:
+        confidence = get_ocr_confidence(gray)
+
+        texto_limpio = re.sub(r'[^A-Za-zÁÉÍÓÚáéíóúÑñ0-9]','',texto_documento)
+
+        print("OCR confidence:", confidence)
+        print("Readable chars:", len(texto_limpio))
+
+        if len(texto_limpio) < 100:
             raise Exception(
-                f"{file.filename} is not clear"
+                f"{file.filename} contains insufficient readable text"
+            )
+
+        if confidence < 80:
+            raise Exception(
+                f"{file.filename} OCR confidence too low"
             )
 
     return texto_documento
@@ -109,7 +156,9 @@ def process_file(file):
 @app.route('/upload', methods=['POST'])
 def upload():
 
-    print("UPLOAD RECIBIDO")
+    print("================================", flush=True)
+    print("UPLOAD RECIBIDO", flush=True)
+    print("================================", flush=True)
 
     try:
 
