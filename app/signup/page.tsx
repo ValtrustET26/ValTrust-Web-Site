@@ -1,10 +1,49 @@
-export const metadata = {
-  title: "Valtrust Sign Up",
-};
-
+"use client";
 import Image from "next/image";
+import { useSignUp, useUser, useAuth } from "@clerk/nextjs";
+import { useState } from "react";
+import { SubmitEventHandler } from "react";
+import { X } from "lucide-react";
+
 
 export default function SignUp() {
+  const [firstName, setFirstName] = useState("");
+   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setErrorMessage] = useState("")
+  const role = "buyer"
+  const signUp = useSignUp();
+
+  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+  
+      if (!email || !password) {
+        setErrorMessage("Please complete the form");
+        return;
+      }
+      else if (password !== confirmPassword) {
+        setErrorMessage("The passwords do not match ");
+        return;
+      }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        setErrorMessage("Invalid email address");
+        return;
+      }
+      else if (role == null) {
+        setErrorMessage("Please choose a role");
+        return;
+      }
+      else{
+        setErrorMessage("")
+      }
+      
+
+    
+  };
+
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="absolute -bottom-28 -left-28 w-72 h-72 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] z-0" />
@@ -30,18 +69,37 @@ export default function SignUp() {
                 Sign up to continue your experience
               </p>
             </div>
+            {error != "" && (
+              <div className=" flex justify-center bg-red-200 border-solid border-2 border-red-400 text-black text-center rounded-md  mb-3 h-10 items-center">
+                <p className="w-7/8">{error}</p>
+                <X size={12} className="w-1/8" onClick={()=> setErrorMessage("")} />
+              </div>
+            )}
 
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input
+                  value={firstName}
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="First Name"
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full h-11 px-4 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-[#4ea2ff] text-black"
+                />
+              </div>
+              <div>
+                <input
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  type="text"
+                  placeholder="Last Name"
                   className="w-full h-11 px-4 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-[#4ea2ff] text-black"
                 />
               </div>
 
               <div>
                 <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   placeholder="Email"
                   className="w-full h-11 px-4 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-[#4ea2ff] text-black"
@@ -50,6 +108,8 @@ export default function SignUp() {
 
               <div>
                 <input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   type="password"
                   placeholder="Password"
                   className="w-full h-11 px-4 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-[#4ea2ff] text-black"
@@ -58,6 +118,8 @@ export default function SignUp() {
 
               <div>
                 <input
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   type="password"
                   placeholder="Confirm password"
                   className="w-full h-11 px-4 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-[#4ea2ff] text-black"
