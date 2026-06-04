@@ -100,7 +100,7 @@ export default function TermsSeller() {
         {/* 2. Required Documents */}
         <section className="scroll-reveal">
           <SectionHeading number="2" title="Required Documents" />
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid md:flex gap-4">
             {[
               { title: "Property Deed", desc: "Upload a clear and valid property deed", icon: <DeedIcon /> },
               { title: "Certificate of Ownership", desc: "Provide proof of ownership or possession", icon: <CertIcon /> },
@@ -121,8 +121,8 @@ export default function TermsSeller() {
         </section>
 
         {/* 3 & 4 side by side */}
-        <div className="grid grid-cols-2 gap-4">
-          <section className="scroll-reveal flex flex-col">
+        <div className="grid md:flex md:full gap-4">
+          <section className="scroll-reveal flex flex-col md:w-full">
             <SectionHeading number="3" title="Listing Policy" />
             <div className="card-item flex-1 border border-gray-200 rounded-2xl p-5 flex gap-4 items-start bg-white shadow-sm hover:shadow-md hover:border-[var(--gr-main)]/40 transition-all duration-300">
               <div className="shrink-0 w-12 h-12 border border-[var(--gr-main)]/30 rounded-xl flex items-center justify-center bg-[var(--gr-main)]/5">
@@ -164,7 +164,7 @@ export default function TermsSeller() {
         {/* 5. Payments & Transactions */}
         <section className="scroll-reveal">
           <SectionHeading number="5" title="Payments & Transactions" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid md:flex gap-4">
             {[
               {
                 title: "Secure Payments",
@@ -206,8 +206,8 @@ export default function TermsSeller() {
               <div
                 className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-200 ${
                   agreed
-                    ? "bg-[var(--bl-main)] border-[var(--bl-main)]"
-                    : "border-gray-300 group-hover:border-[var(--gr-main)]"
+                    ? "bg-bl-main border-bl-main"
+                    : "border-gray-300 group-hover:border-gr-main"
                 }`}
               >
                 {agreed && (
