@@ -308,4 +308,4 @@ function ShieldIcon() {
 
 function HandshakeIcon() {
   return <Handshake className="w-8 h-8" color="var(--gr-main)" strokeWidth={1.5} />;
-}
+} 
