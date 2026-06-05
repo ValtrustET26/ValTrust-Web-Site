@@ -1,6 +1,6 @@
 "use server";
 
-import { PrismaClient } from "../../node_modules/.prisma/client";
+import { PrismaClient } from ".prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Record } from "@prisma/client/runtime/client";
 

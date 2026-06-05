@@ -87,9 +87,9 @@ export default function ValuationResultClient({
     function handleEdit() {
         try {
             sessionStorage.setItem("valuation_prefill", JSON.stringify(rawValuation));
-            router.push("/Valuation?edit=true");
+            router.push("/seller/Valuation?edit=true");
         } catch {
-            router.push("/Valuation");
+            router.push("/seller/Valuation");
         }
     }
 

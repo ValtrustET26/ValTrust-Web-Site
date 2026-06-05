@@ -202,7 +202,7 @@ export default function Valuation() {
         setIsSubmitting(true);
         try {
             const result = await calculateValuation(form);
-            if (result?.id) router.push(`/ValuationResult?id=${result.id}`);
+            if (result?.id) router.push(`/seller/ValuationResult?id=${result.id}`);
         } catch (err) {
             console.error(err);
             alert("Something went wrong while saving your house estimate.");
