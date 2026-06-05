@@ -2,6 +2,8 @@
 "use client";
 import { useAuth, useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+
+
 import { useState } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -19,7 +21,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [pendingVerification, setPendingVerification] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState(true);
   const [code, setCode] = useState("");
  
   const role = "buyer";
@@ -32,15 +34,15 @@ export default function SignUp() {
  
     // Validaciones
     if (!email || !password) {
-      setErrorMessage("Por favor completa el formulario");
+      setErrorMessage("Please complete the form");
       return;
     }
     if (password !== confirmPassword) {
-      setErrorMessage("Las contraseñas no coinciden");
+      setErrorMessage("Passwords do not match");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setErrorMessage("Correo electrónico inválido");
+      setErrorMessage("Invalid Email");
       return;
     }
     setErrorMessage("");
@@ -52,7 +54,7 @@ export default function SignUp() {
     });
  
     if (error) {
-      setErrorMessage(error.message || "Error al crear la cuenta");
+      setErrorMessage(error.message || "There was an error. Please try again");
       console.error(JSON.stringify(error, null, 2));
       return;
     }
@@ -66,6 +68,9 @@ export default function SignUp() {
    e.preventDefault();
    setErrorMessage("");
 
+   if(code == ""){
+    setErrorMessage("Please enter the verification code")
+   }
    // ✅ Clerk v7: signUp.verifications.verifyEmailCode()
    await signUp.verifications.verifyEmailCode({ code });
 
@@ -77,13 +82,13 @@ export default function SignUp() {
        },
      });
    } else {
-     setErrorMessage("Verificación incompleta, intenta de nuevo");
+     setErrorMessage("There was an error. Please try again");
    }
  };
  
   // Si ya está autenticado, redirige
   if (isSignedIn) {
-    router.push("/dashboard");
+    router.push("/");
     return null;
   }
 
@@ -92,7 +97,7 @@ export default function SignUp() {
     <div className="relative min-h-screen overflow-hidden bg-white">
       <div className="absolute -bottom-28 -left-28 w-72 h-72 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] z-0" />
 
-      <div className="relative z-10 min-h-screen flex flex-col md:flex-row">
+      <div className="relative z-10 min-h-screen flex flex-col md:flex-row w-full">
         {!pendingVerification && (
           <div className="w-full md:w-1/2 min-h-screen flex items-center justify-center px-6 sm:px-10 lg:px-24 py-10">
             <div className="w-full max-w-md -mt-10">
@@ -205,17 +210,55 @@ export default function SignUp() {
             </div>
           </div>
         )}
-        <div>
+
+        
           {pendingVerification && (
-            <div>
+            <div className="relative z-10 min-h-screen flex flex-col md:flex-row w-full -mt-10">
+              
+            <div className="w-full md:w-1/2 min-h-screen flex-col flex items-center justify-center md:ml-[30%]">
+             <div>
+                <Image
+                  src={"/valtrust-isologo.png"}
+                  alt={"Valtrust Isologo"}
+                  height={200}
+                  width={200}
+                />
+              </div>
+               <div className="mb-8">
+                <h2 className="text-4xl sm:text-5xl font-light text-black mb-2">
+                  Almost there
+                </h2>
+
+                <p className="text-gray-500">
+                  Let´s verify you account
+                </p>
+              </div>
+              <form className="flex items-center justify-center gap-10 flex-col" onSubmit={handleVerify}>
+                
               <input
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="Enter 6-digit code"
+                className="border-bl-main border-solid border-2 rounded-md w-full h-11 px-4 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-[#4ea2ff] text-black "
+                id="verification-code"
               />
+              <button type="submit" className="text-white bg-bl-main p-2 w-1/2 rounded-lg">Verify</button>
+              </form>
+               {errorMessage != "" && (
+                <div className={`transition-opacity duration-500 ease-in-out flex justify-center bg-red-200 border-solid border-2 border-red-400 text-black text-center rounded-md mt-3 mb-3 h-10 items-center text-sm
+  ${errorMessage !== "" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                  <p className="w-7/8">{errorMessage}</p>
+                  <X
+                    size={12}
+                    className="w-1/8"
+                    onClick={() => setErrorMessage("")}
+                  />
+                </div>
+              )}
+            </div>
             </div>
           )}
-        </div>
+      
 
         <div className="hidden md:flex md:w-1/2 h-screen items-center justify-center relative overflow-hidden">
           <div className="absolute -top-40 -right-28 w-[720px] h-[720px] rounded-full bg-gradient-to-br from-[#163d96] via-[#2458d4] to-[#3f95ff]" />

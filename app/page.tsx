@@ -5,6 +5,7 @@ import Footer from "./components/layout/footer/footer";
 import { TypeAnimation } from "react-type-animation";
 
 
+
 export default function Home() {
   return (
     <div className="flex flex-col bg-zinc-50 font-sans dark:bg-black">

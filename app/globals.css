@@ -46,6 +46,8 @@
 }
 
 @theme inline {
+  --ease-smooth-error: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-gentle: cubic-bezier(0.0, 0.0, 0.2, 1);
   --color-bl-main:var(--bl-main);
   --color-gr-main:var(--gr-main);
   --color-br-main:var(--br-main);
