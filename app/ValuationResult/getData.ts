@@ -25,4 +25,4 @@ export async function getValuationData(id: string) {
         console.error("Error al obtener la valoración desde la base de datos:", error);
         return null;
     }
-}
+};
