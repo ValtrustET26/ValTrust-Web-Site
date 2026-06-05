@@ -1,70 +1,91 @@
+
 "use client";
-import Image from "next/image";
-import { useSignUp, useUser, useAuth, } from "@clerk/nextjs";
+import { useAuth, useSignUp } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SubmitEventHandler } from "react";
 import { X } from "lucide-react";
-
-
+import Image from "next/image";
+ 
 export default function SignUp() {
+  // ✅ Clerk v7 usa useSignUp  y retorna { signUp, errors, fetchStatus }
+  // Ya NO retorna isLoaded, ni setActive como en los clerk anteriores
+  const { signUp, errors, fetchStatus } = useSignUp();
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+ 
   const [firstName, setFirstName] = useState("");
-   const [lastName, setLastName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setErrorMessage] = useState("")
-   const [verification, setVerification] = useState(false); 
-  const role = "buyer"
-  const {signUp, errors, fetchStatus} = useSignUp();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
-  
-  
-
-  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
+ 
+  const role = "buyer";
+ 
+  // fetchStatus === "fetching" reemplaza al antiguo isLoaded
+  const isLoading = fetchStatus === "fetching";
+ 
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+ 
+    // Validaciones
     if (!email || !password) {
-      setErrorMessage("Please complete the form");
+      setErrorMessage("Por favor completa el formulario");
       return;
-    } else if (password !== confirmPassword) {
-      setErrorMessage("The passwords do not match ");
-      return;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setErrorMessage("Invalid email address");
-      return;
-    } else if (role == null) {
-      setErrorMessage("Please choose a role");
-      return;
-    } else {
-      setErrorMessage("");
     }
-
-   try {
-    await signUp.create({
+    if (password !== confirmPassword) {
+      setErrorMessage("Las contraseñas no coinciden");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorMessage("Correo electrónico inválido");
+      return;
+    }
+    setErrorMessage("");
+ 
+    // ✅ Clerk v7: signUp.password() en lugar de signUp.create()
+    const { error } = await signUp.password({
       emailAddress: email.trim(),
       password,
-      unsafeMetadata: {
-        firstName,
-        lastName,
-        role,
-      },
     });
-   await signUp.verifications.sendEmailCode();
-    const result = await signUp.verifications.verifyEmailCode({
-      code,
-    });
-    
-
-       
-
-     setVerification(true);
-   } catch (err: any) {
-     setErrorMessage(err.errors?.[0]?.message || "problems with SignUp");
-     console.log(error)
-   }
-
-   
+ 
+    if (error) {
+      setErrorMessage(error.message || "Error al crear la cuenta");
+      console.error(JSON.stringify(error, null, 2));
+      return;
+    }
+ 
+    //signUp.verifications.sendEmailCode() en lugar de prepareEmailAddressVerification()
+    await signUp.verifications.sendEmailCode();
+    setPendingVerification(true);
   };
+ 
+ const handleVerify = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+   e.preventDefault();
+   setErrorMessage("");
+
+   // ✅ Clerk v7: signUp.verifications.verifyEmailCode()
+   await signUp.verifications.verifyEmailCode({ code });
+
+   if (signUp.status === "complete") {
+     // ✅ Clerk v7: signUp.finalize() en lugar de setActive()
+     await signUp.finalize({
+       navigate: () => {
+         router.push("/buyer/terms"); // cambia a tu ruta deseada
+       },
+     });
+   } else {
+     setErrorMessage("Verificación incompleta, intenta de nuevo");
+   }
+ };
+ 
+  // Si ya está autenticado, redirige
+  if (isSignedIn) {
+    router.push("/dashboard");
+    return null;
+  }
 
 
   return (
@@ -72,7 +93,7 @@ export default function SignUp() {
       <div className="absolute -bottom-28 -left-28 w-72 h-72 rounded-full bg-gradient-to-br from-[#2563eb] to-[#60a5fa] z-0" />
 
       <div className="relative z-10 min-h-screen flex flex-col md:flex-row">
-        {!verification && (
+        {!pendingVerification && (
           <div className="w-full md:w-1/2 min-h-screen flex items-center justify-center px-6 sm:px-10 lg:px-24 py-10">
             <div className="w-full max-w-md -mt-10">
               <div>
@@ -93,9 +114,9 @@ export default function SignUp() {
                   Sign up to continue your experience
                 </p>
               </div>
-              {error != "" && (
+              {errorMessage != "" && (
                 <div className=" flex justify-center bg-red-200 border-solid border-2 border-red-400 text-black text-center rounded-md  mb-3 h-10 items-center">
-                  <p className="w-7/8">{error}</p>
+                  <p className="w-7/8">{errorMessage}</p>
                   <X
                     size={12}
                     className="w-1/8"
@@ -184,14 +205,17 @@ export default function SignUp() {
             </div>
           </div>
         )}
-
-        {verification && (
-          <input
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="Enter 6-digit code"
-          />
-        )}
+        <div>
+          {pendingVerification && (
+            <div>
+              <input
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter 6-digit code"
+              />
+            </div>
+          )}
+        </div>
 
         <div className="hidden md:flex md:w-1/2 h-screen items-center justify-center relative overflow-hidden">
           <div className="absolute -top-40 -right-28 w-[720px] h-[720px] rounded-full bg-gradient-to-br from-[#163d96] via-[#2458d4] to-[#3f95ff]" />
