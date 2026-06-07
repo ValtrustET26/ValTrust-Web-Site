@@ -1,8 +1,7 @@
 'use client'
 import Image from "next/image";
-import LandingNav from "./components/layout/navbars/landingnav";
-import Footer from "./components/layout/footer/footer";
 import { TypeAnimation } from "react-type-animation";
+import LandingFooter from "./components/layout/footers/landing-footer";
 
 
 export default function Home() {
@@ -132,7 +131,7 @@ export default function Home() {
         </div>
       </section>
 
-     
+     <LandingFooter/>
     </div>
   );
 }

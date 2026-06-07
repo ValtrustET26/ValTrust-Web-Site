@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Menu, X, House, Gem, Settings, Landmark, Activity } from "lucide-react";
 import { useState } from "react";
 import { UserProfile } from "@clerk/nextjs";
-
+import Link from "next/link";
 
 
 
@@ -24,7 +24,9 @@ export default function SellerNav() {
         <div className="md:block hidden w-2/3 md:text-md ">
           <ul className="flex justify-end items-center gap-2">
             <li className="hover:bg-zinc-300 p-3 rounded-2xl w-2/9 flex justify-center">
+            <Link href={"/seller"}>
               Home
+              </Link>
             </li>
             <li className="hover:bg-zinc-300 p-3 rounded-2xl w-2/9 flex justify-center ">
               Marketplace

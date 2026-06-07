@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import LandingNav from "./components/layout/navbars/landingnav";
-import Footer from "./components/layout/footer/footer";
+
 
 
 const poppins = Poppins({
@@ -39,9 +39,10 @@ export default function RootLayout({
         className={` h-full antialiased dark`}
       >
         <body className={`${poppins.className} min-h-full flex flex-col`}>
+        
            <LandingNav />
           {children}
-           <Footer/>
+           
         </body>
       </html>
     </ClerkProvider>

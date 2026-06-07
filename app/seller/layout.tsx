@@ -1,4 +1,5 @@
 import SellerNav from "../components/layout/navbars/sellernav";
+import SellerBuyerFooter from "../components/layout/footers/SellerBuyerFooter";
 
 
 export default function SellerLayout({
@@ -10,6 +11,7 @@ export default function SellerLayout({
     <div className="min-h-full flex flex-col">
       <SellerNav/>
       <main>{children}</main>
+      <SellerBuyerFooter/>
     </div>
   );
 }

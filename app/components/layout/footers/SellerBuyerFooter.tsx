@@ -3,7 +3,7 @@ import Image from "next/image"
 import { MapPin, Copyright} from "lucide-react";
 
 
-export default function Footer(){
+export default function SellerBuyerFooter(){
     return (
       <>
         <section className="w-full h-screen md:h-90  flex-col justify-center items-center relative">
