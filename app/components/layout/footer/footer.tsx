@@ -6,7 +6,7 @@ import { MapPin, Copyright} from "lucide-react";
 export default function Footer(){
     return (
       <>
-        <section className="w-full h-screen md:h-90  flex-col justify-center items-center relative ">
+        <section className="w-full h-screen md:h-90  flex-col justify-center items-center relative">
           <Image
             src={"/footer-image.png"}
             alt={"Footer Image"}
