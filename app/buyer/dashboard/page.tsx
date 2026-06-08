@@ -12,8 +12,9 @@ import { Eye } from 'lucide-react';
 import Image from "next/image";
 import { ChartNoAxesColumnIncreasing } from 'lucide-react';
 import { Navigation } from 'lucide-react';
+
 export default function 
-DashboardPage(){
+DashboardPage(){ 
     {/*Navigation menu list */}
     const menuItems = [
         { id: "mainDashboard", icon: UserPen, text: "Main Dashboard"},
@@ -71,6 +72,27 @@ DashboardPage(){
             image: "/santa-tecla.png"
         },  
     ];
+
+    const nearProperties = [
+        {
+            id: 1,
+            property: "Calle los Pinos 14, La Libertad",
+            image: "/casa-5.jpg",
+            price: "125,000",
+        },
+        {
+            id: 2,
+            property: "Pasaje Las Flores 28",
+            image: "/casa-4.avif",
+            price: "100,000",
+        },
+        {
+            id: 3,
+            property: "Avenida Principal 105",
+            image: "/casa-3.png",
+            price: "125,000",
+        },
+    ]
     return(
         /*Menú*/
         <div className="flex min-h-screen bg-white">
@@ -175,8 +197,8 @@ DashboardPage(){
             <div className="flex gap-5">
 
                 {/*Trending Properties*/}
-                <div className="flex-1 h-55 bg-[#0B1E4A] rounded-xl">
-                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2">
+                <div className="flex-1  h-55 bg-[#0B1E4A] rounded-xl">
+                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-3">
                         <ChartNoAxesColumnIncreasing/>Trending Properties
                         <button className="text-xs ml-35 text-gray-400">see more</button>
                     </h2>
@@ -201,14 +223,37 @@ DashboardPage(){
                 
                 {/*Near you*/}
                 <div className="flex-1 h-55 bg-[#0B1E4A] rounded-xl">
-                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2">
+                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-3">
                         <Navigation/>Properties Near You
                     </h2>
 
+                    <div className="flex gap-3 p-3 -mt-9 h-48">
+                        {nearProperties.map((near) => (
+                        <div key={near.id}
+                        className="w-[140px] h-42 bg-white rounded-3xl overflow-hidden shadow-lg">
+                            <Image
+                            src={near.image}
+                            alt={near.property}
+                            width={70}
+                            height={24}
+                            className="w-full h-20 object-cover"
+                            />
+                            <div className="p-3 -mt-5 py-7">
+                                <h3 className="font-bold text-black text-xs">{near.property}</h3>
+                                <p className="text-xs font-bold text-blue-600">{near.price}</p>
+                                <button className=" flex items-center bg-blue-100 px-2 py-1 rounded-lg text-blue-600 text-[10px] mt-1">
+                                    view details
+                                </button>
+                                
+                            </div>
+
+                        </div>
+                        ))}
+                    </div>
+                  </div>      
                 </div>
             </div>
         </div>
-    </div>
 
     );
 
