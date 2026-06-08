@@ -32,7 +32,7 @@ export default function LandingNav() {
               </Link>
             </li>
             <li className="hover:bg-zinc-300 p-3 rounded-4xl w-2/9 flex justify-center ">
-             <Link href={"/about-us"}>
+             <Link href={"/aboutUs"}>
               About Us
               </Link>
             </li>
@@ -86,7 +86,7 @@ export default function LandingNav() {
             </div>
             
             <div className="w-full ">
-              <Link href={"about-us"} className="flex gap-2 justify-center items-center">
+              <Link href={"aboutUs"} className="flex gap-2 justify-center items-center">
               <SwatchBook size={30} />
               <h3 className="w-full flex flex-col">About Us</h3>
               </Link>

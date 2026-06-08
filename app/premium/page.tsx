@@ -1,3 +1,5 @@
+import LandingFooter from "../components/layout/footers/landing-footer";
+
 export default function Premium() {
   return (
 <main className="min-h-screen bg-black text-white overflow-hidden md:mt-20 mt-42">
@@ -146,6 +148,8 @@ export default function Premium() {
 </section>
 </div>
 </section>
+
+<LandingFooter/>
 </main>
   );
 }
