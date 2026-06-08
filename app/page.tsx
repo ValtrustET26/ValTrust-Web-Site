@@ -1,14 +1,13 @@
 'use client'
 import Image from "next/image";
-import LandingNav from "./components/layout/navbars/landingnav";
-import Footer from "./components/layout/footer/footer";
 import { TypeAnimation } from "react-type-animation";
+import LandingFooter from "./components/layout/footers/landing-footer";
 
 
 export default function Home() {
   return (
     <div className="flex flex-col bg-zinc-50 font-sans dark:bg-black">
-      <LandingNav />
+     
 
       <section className="relative w-full h-[70vh]  md:h-screen overflow-hidden z-1">
         <Image
@@ -30,6 +29,7 @@ export default function Home() {
                 "Find Your Dream Land With Valtrust",
               ]}
               wrapper="h1"
+              cursor={false}
               speed={50}
               repeat={0}
               className="text-white font-bold leading-tight text-5xl sm:text-6xl md:text-7xl"
@@ -51,7 +51,7 @@ export default function Home() {
           <Image
             src={"/top-listing.png"}
             alt={"Top Listing Image"}
-            className="object-contain"
+            className="object-contain rounded-lg"
             fill
           />
         </div>
@@ -59,20 +59,20 @@ export default function Home() {
           <Image
             src={"/evaluate-land.png"}
             alt={"Evaluate Land Image"}
-            className="object-contain"
+            className="object-contain rounded-lg"
             fill
           />
         </div>
       </section>
 
-      <section className="bg-white p-5 text-black flex flex-col min-h-full p-20">
+      <section className="bg-white p-5 text-black flex flex-col min-h-full w-full p-20">
         <div className="text-lg flex items-center w-full mt-10 justify-start p-10 font-bold font-sans">
           Explore Our Communities
         </div>
 
         <div className="flex flex-col  w-full items-center justify-center md:flex-row gap-10 ">
-          <div className=" w-full md:w-3/6  lg:w-2/6 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
-            <div className="relative w-full  h-100 ">
+          <div className=" w-full md:w-3/6  lg:w-2/6 sm:w-full flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
+            <div className="relative w-full  h-70 ">
               <Image
                 src={"/santa-tecla.png"}
                 alt={"Santa Tecla"}
@@ -85,7 +85,7 @@ export default function Home() {
           </div>
 
           <div className="w-full md:w-3/6 lg:w-2/6 flex jusify-center flex-col shadow-2xl rounded-lg gap-2 transition-all duration-300 hover:scale-105">
-            <div className="relative w-full h-100 ">
+            <div className="relative w-full h-70 ">
               <Image
                 src={"/santa-ana.png"}
                 alt={"Santa Ana"}
@@ -104,7 +104,7 @@ export default function Home() {
           <h2 className="text-5xl font-bold flex justify-center w-full md:w-2/3 ">
             About Valtrust
           </h2>
-          <p className="text-lg md:text-2xl w-full md:w-5/6 sm:p-10">
+          <p className="text-lg md:text-sm w-full  md:w-5/6 sm:p-10">
             We are a digital platform that modernizes property buying, selling,
             and valuation in El Salvador through AI and real market data. We
             connect owners, buyers and investors in a secure and transparent
@@ -132,7 +132,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Footer/>
+     <LandingFooter/>
     </div>
   );
 }
