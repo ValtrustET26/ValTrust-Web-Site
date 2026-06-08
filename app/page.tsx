@@ -19,14 +19,14 @@ export default function Home() {
           fill
         />
 
-        <div className="absolute inset-0 flex items-center pt-20 md:pt-0r">
+        <div className="absolute inset-0 flex items-center pt-10 md:pt-0r">
           <div className="px-6 md:px-16 max-w-3xl">
             <TypeAnimation
               sequence={[
                 "Find Your Dream",
-                200,
+                100,
                 "Find Your Dream Land With",
-                200,
+                100,
                 "Find Your Dream Land With Valtrust",
               ]}
               wrapper="h1"
