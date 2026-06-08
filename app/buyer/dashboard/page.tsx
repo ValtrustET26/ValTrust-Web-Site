@@ -1,11 +1,38 @@
+'use client';
+import {useState} from "react";
+import { ShoppingCart } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { Files } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { UserPen } from 'lucide-react';
+import { Eye } from 'lucide-react';
+import Image from "next/image";
 export default function 
 DashboardPage(){
+    {/*Navigation menu list */}
+    const menuItems = [
+        { id: "mainDashboard", icon: UserPen, text: "Main Dashboard"},
+        {id: "searches", icon: Search, text: "My Searches"},
+        {id: "saved", icon: Heart, text: "Saved Properties"},
+        {id: "notifications", icon: Bell, text: "Notifications"},
+        {id: "documents", icon: Files, text: "Documents"},
+        {id: "settings2", icon: Settings, text: "Settings"},
+    ];
+
+
+    const[active, setActive] = useState("");
+
+    {/*Purchase Summary data*/}
     const summary = {
         avgPurchasePrice: "$202,200",
         activeUnderContract: 2,
         savedSearches: 5,
     };
 
+    {/*Purchases list */}
     const purchases = [
         {
             id: 1,
@@ -14,6 +41,7 @@ DashboardPage(){
             statusColor: "bg-green-500",
             date: "May 12, 2026",
             price: "202,500",
+            image : "/casa-1.png",
         },
         {
             id: 2,
@@ -22,6 +50,7 @@ DashboardPage(){
             statusColor: "bg-orange-400",
             date: "May 25, 2026",
             price: "175,000",
+            image: "/santa-ana.png"
         },
     ];
 
@@ -34,27 +63,36 @@ DashboardPage(){
             <div className="mt-4 h-6"></div>
 
             <nav className="mt-30">
-                <ul className="space-y-6 ml-17 text-sm">
-                    <li>Dashboard</li>
-                    <li>My Searches</li>
-                    <li>Saved Properties</li>
-                    <li>Messages</li>
-                    <li>Documents</li>
-                    <li>Settings</li>
+                <ul className="space-y-3 ml-6 text-sm">
+                    {menuItems.map((item) =>{
+                        const Icon = item.icon;
+                        return(
+                            <li
+                            key={item.id} 
+                            onClick={() => setActive(item.id)}
+                            className={`flex items-center gap-4 p-2 rounded-xl cursor-pointer ${
+                            active === item.id ? "bg-[#1A6373]" : ""
+                            }`}>
+                                <Icon />
+                                {item.text}
+                            </li>
+                        );
+                    })}
+                    
                 </ul>
             </nav>
 
-            <div className="ml-8 text-sm mt-20 text-white">Log out</div>
+            <div className="flex items-center ml-3 text-sm mt-20 text-white gap-2"><LogOut/>Log out</div>
         </aside>
 
-        
+        {/*dashboard */}
         <div className="flex-1 p-5">
 
-            {/*Primer Cuadro*/}
+            {/*Summary purchase*/}
             <div className=" text-white h-39 bg-[#0B1E4A] rounded-xl mb-4">
-                <h2 className="text-base font-medium mb-8 ml-17 pt-2">My purchase Summary</h2>
+                <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-4"><ShoppingCart/>My purchase Summary</h2>
 
-                <div className="grid grid-cols-3 -mt-2">
+                <div className="grid grid-cols-3 -mt-3">
                     <div className="text-center border-r border-gray-500 px-8">
                         <h3 className="text-sm">Avg. Purchase Price</h3>
                         <p className="text-xl font-medium pt-2">{summary.avgPurchasePrice}</p>
@@ -75,22 +113,28 @@ DashboardPage(){
                 
             </div>
 
-            {/*Segundo Cuadro*/}
+            {/*Purchases*/}
             <div className=" h-60 bg-[#0B1E4A] rounded-xl mb-5">
                 <h2 className="ml-5 text-base font-medium mb-3 pt-2">My purchases</h2>
 
-                <div className="grid grid-cols-5 pb-2 border-b border-gray-500 text-gray-300 text-sm ml-5">
+                <div className="grid grid-cols-5 pb-2 border-b border-gray-500 text-gray-300 text-sm ml-6">
                     <p>Properties</p>
                     <p className="ml-55">Status</p>
                     <p className="ml-40">Date</p>
                     <p className="ml-25">Price</p>
-                    <p className="ml-15">Actions</p>
+                    <p className="ml-16">Actions</p>
                 </div>
 
                 {purchases.map((purchase) => (
-                  <div key={purchase.id} className="grid grid-cols-[3fr_1fr_1fr_1fr_1fr] grid-4 items-center py-2 border-b border-gray-500 ml-5">
+                  <div key={purchase.id} className="grid grid-cols-[3fr_1fr_1fr_1fr_1fr] grid-4 items-center py-2 border-b border-gray-500 ml-6">
                     <div className="flex items-center gap-4 w-full">
-                        <div className="w-27 h-12 bg-gray-300 rounded-md"></div>
+                        <Image
+                            src = {purchase.image}
+                            alt= {purchase.property}
+                            width={75}
+                            height={27}
+                            className="rounded-md"
+                        />
                         <p className="text-xs">{purchase.property}</p>
                     </div>
 
@@ -100,21 +144,28 @@ DashboardPage(){
 
                     <p className="text-xs">{purchase.date}</p>
                     <p className="text-xs">{purchase.price}</p>
-                    <button className="text-xs">view</button>
+                    <button className="flex items-center text-xs gap-2 border-l border-gray-500 pl-3">
+                        <Eye className='text-blue-500'/>view
+                    </button>
                 </div>  
                 
                 ))}
+                <button className='text-xs mt-3 ml-6 text-gray-500 '>View All Purchases</button>
                 
             </div>
 
-            {/*Últimos dos cuadros*/}
+            {/*last items*/}
             <div className="flex gap-5">
 
-                {/*Cuadro izquierdo*/}
-                <div className="flex-1 h-44 bg-[#0B1E4A] rounded-xl">cuadro 3</div>
+                {/*Messages*/}
+                <div className="flex-1 h-50 bg-[#0B1E4A] rounded-xl">
+                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2">Messages</h2>
+                </div>
                 
-                {/*Cuadro Derecho*/}
-                <div className="flex-1 h-44 bg-[#0B1E4A] rounded-xl">cuadro 4</div>
+                {/*Notifications*/}
+                <div className="flex-1 h-50 bg-[#0B1E4A] rounded-xl">
+                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2"><Bell/>Notifications</h2>
+                </div>
             </div>
         </div>
     </div>
