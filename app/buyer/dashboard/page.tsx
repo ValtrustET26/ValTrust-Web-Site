@@ -10,6 +10,8 @@ import { LogOut } from 'lucide-react';
 import { UserPen } from 'lucide-react';
 import { Eye } from 'lucide-react';
 import Image from "next/image";
+import { ChartNoAxesColumnIncreasing } from 'lucide-react';
+import { Navigation } from 'lucide-react';
 export default function 
 DashboardPage(){
     {/*Navigation menu list */}
@@ -54,6 +56,21 @@ DashboardPage(){
         },
     ];
 
+    {/*Trending */}
+    const Trending = [
+        {
+            id: 1,
+            property: "Santa Rosa, Polígono B, Casa #8, La Libertad, El Salvador",
+            price: "200,000",
+            image : "/casa-2.png",
+        },
+        {
+            id: 2,
+            property: "Santa Tecla, Avenida Central #19, La Libertad, El Salvador",
+            price: "100,000",
+            image: "/santa-tecla.png"
+        },  
+    ];
     return(
         /*Menú*/
         <div className="flex min-h-screen bg-white">
@@ -82,7 +99,7 @@ DashboardPage(){
                 </ul>
             </nav>
 
-            <div className="flex items-center ml-3 text-sm mt-20 text-white gap-2"><LogOut/>Log out</div>
+            <div className="flex items-center ml-3 text-sm mt-26 text-white gap-2"><LogOut/>Log out</div>
         </aside>
 
         {/*dashboard */}
@@ -157,14 +174,37 @@ DashboardPage(){
             {/*last items*/}
             <div className="flex gap-5">
 
-                {/*Messages*/}
-                <div className="flex-1 h-50 bg-[#0B1E4A] rounded-xl">
-                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2">Messages</h2>
+                {/*Trending Properties*/}
+                <div className="flex-1 h-55 bg-[#0B1E4A] rounded-xl">
+                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2">
+                        <ChartNoAxesColumnIncreasing/>Trending Properties
+                        <button className="text-xs ml-35 text-gray-400">see more</button>
+                    </h2>
+                    {Trending.map((trend) => (
+                    <div key={trend.id}
+                    className="flex items-center gap-4 w-95 mb-4 ml-5 border-b border-gray-500 pb-2 ">
+                        <Image
+                        src={trend.image}
+                        alt={trend.property}
+                        width={70}
+                        height={25}
+                        className="rounded-md"
+                        />
+
+                        <div>
+                            <p className="text-xs">{trend.property}</p>
+                            <p className="text-xs text-gray-400">${trend.price}</p>
+                        </div>
+                    </div>
+                    ))}
                 </div>
                 
-                {/*Notifications*/}
-                <div className="flex-1 h-50 bg-[#0B1E4A] rounded-xl">
-                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2"><Bell/>Notifications</h2>
+                {/*Near you*/}
+                <div className="flex-1 h-55 bg-[#0B1E4A] rounded-xl">
+                    <h2 className="flex items-center gap-2 text-base font-medium mb-8 ml-6 pt-2">
+                        <Navigation/>Properties Near You
+                    </h2>
+
                 </div>
             </div>
         </div>
