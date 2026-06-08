@@ -29,6 +29,7 @@ export default function Home() {
                 "Find Your Dream Land With Valtrust",
               ]}
               wrapper="h1"
+              cursor={false}
               speed={50}
               repeat={0}
               className="text-white font-bold leading-tight text-5xl sm:text-6xl md:text-7xl"
