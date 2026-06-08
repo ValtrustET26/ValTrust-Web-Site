@@ -1,4 +1,5 @@
 "use client";
+import LandingFooter from "../components/layout/footers/landing-footer";
 
 import { useEffect } from "react";
 import Image from "next/image";
@@ -41,10 +42,10 @@ export default function AboutPage() {
         }, []);
 
     return (
-    <div className="bg-white text-slate-800">
+    <div className=" mt-30 md:mt-0">
 
     {/* HERO */}
-    <section className="relative overflow-hidden bg-[#0b1e4a]">
+    <section className="relative overflow-hidden bg-[#0b1e4a] ">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#1a6373]/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#2a0c0f]/20 rounded-full blur-3xl"></div>
 
@@ -92,7 +93,7 @@ export default function AboutPage() {
     </section>
 
     {/* ABOUT */}
-    <section className="py-24">
+    <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold text-[#0b1e4a]">
                 Why ValTrust?
@@ -108,7 +109,7 @@ export default function AboutPage() {
     </section>
 
     {/* MISSION VISION */}
-    <section className="pb-24">
+    <section className="pb-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-8">
 
         <div className="bg-slate-50 p-10 rounded-3xl border">
@@ -135,7 +136,7 @@ export default function AboutPage() {
     </section>
 
     {/* STATS */}
-    <section className="pb-24">
+    <section className="pb-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-4 gap-6">
 
@@ -172,7 +173,7 @@ export default function AboutPage() {
     </section>
 
     {/* DEVELOPMENT TEAM */}
-            <section className="pb-24">
+            <section className="pb-24 text-slate-800 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
                     <h2 className="text-4xl font-bold text-center text-[#0b1e4a]">
                     Development Team
@@ -217,7 +218,7 @@ export default function AboutPage() {
 </section>
 
     {/* DESIGN TEAM */}
-            <section className="pb-24">
+            <section className="pb-24   text-slate-800 bg-white">
                 <div className="max-w-7xl mx-auto px-6">
                 <h2 className="text-4xl font-bold text-center text-[#0b1e4a]">
                     Design Team
@@ -257,7 +258,7 @@ export default function AboutPage() {
     </div>
     </div>
 </section>
-
+<LandingFooter/>
     </div>
     );
 }
