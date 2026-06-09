@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, use } from "react";
+import { useState} from "react";
+import { verifyProperty } from "@/lib/gemini/veryfy";
 
 import DeedUpload        from "./sellers-components/Deed";
 import ExcerptCertUpload from "./sellers-components/Excerpt";
@@ -196,6 +197,9 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
   const [extractVerified, setExtracverified] = useState(false)
   const [duiVerified, setDuiVerified] = useState(false)
 
+  const [deedData, setDeedData] = useState<any>(null);
+  const [excerptData, setExcerptData] = useState<any>(null);
+
    const [verifyState, setVerifyState] =
     useState<VerifyState>("loading");
 
@@ -208,6 +212,24 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
 
   const currentIndex = steps.findIndex((s) => s.key === stage);
   const goTo = (next: Stage) => { setStage(next); setAnimKey((k) => k + 1); };
+
+  function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string;
+
+      const base64 = result.split(",")[1];
+
+      resolve(base64);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(file);
+  });
+}
 
 //verifies duplicates
   async function getFileHash(file: File) {
@@ -283,70 +305,118 @@ export default function Sellers({ isOpen, onClose }: SellersProps) {
 
   const progressInterval = setInterval(() => {
     currentProgress += 1;
-
-    if (currentProgress >= 95) {
-      currentProgress = 95;
-    }
-
+    if (currentProgress >= 95) currentProgress = 95;
     setOcrProgress(currentProgress);
   }, 200);
 
   try {
+    // ── 1. Preparar FormData ─────────────────────────────
     const data = new FormData();
 
-    deedFiles.forEach((file) => {
-      data.append("deed", file);
-    });
+    deedFiles.forEach((file) => data.append("deed", file));
+    excerptFiles.forEach((file) => data.append("excerpt", file));
+    duiFiles.forEach((file) => data.append("dui", file));
 
-    excerptFiles.forEach((file) => {
-      data.append("excerpt", file);
-    });
-
-    duiFiles.forEach((file) => {
-      data.append("dui", file);
-    });
-
-
+    // ── 2. OCR (Flask) ───────────────────────────────────
     const res = await fetch("http://127.0.0.1:5000/upload", {
       method: "POST",
       body: data,
     });
 
     const result = await res.json();
+    console.log("🔥 FLASK RESULT:", result);
 
-    clearInterval(progressInterval);
-
-    if (!res.ok || !result.success) {
-      setOcrProgress(100);
-      setVerifyState("unverified");
-      return;
+    if (!res.ok || !result?.success) {
+      throw new Error("OCR failed");
     }
 
-    console.log("DEED");
-    console.log(result.deed.texto);
+    if (!result?.deedText || !result?.excerptText) {
+      throw new Error("OCR missing data");
+    }
 
-    console.log("EXCERPT");
-    console.log(result.excerpt.texto);
+    // ── 3. Gemini Calls ──────────────────────────────────
+    const [deedRes, excerptRes] = await Promise.all([
+      fetch("/api/gemini/deed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: result.deedText }),
+      }),
+      fetch("/api/gemini/extracted", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: result.excerptText }),
+      }),
+    ]);
 
-    console.log("DUI");
-    console.log(result.dui.texto);
+    const deedJson = await deedRes.json();
+    const excerptJson = await excerptRes.json();
 
+    if (!deedJson || deedJson.error) {
+      throw new Error("Deed Gemini failed");
+    }
+
+    if (!excerptJson || excerptJson.error) {
+      throw new Error("Excerpt Gemini failed");
+    }
+
+    // ── 4. DUI data ──────────────────────────────────────
+    const duiFile = duiFiles[0];
+
+if (!duiFile) {
+  throw new Error("No DUI uploaded");
+}
+
+const base64 = await fileToBase64(duiFile);
+
+const duiRes = await fetch("/api/gemini/dui", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    imageBase64: base64,
+    mimeType: duiFile.type,
+  }),
+});
+
+const duiJson = await duiRes.json();
+
+if (!duiJson || duiJson.error) {
+  throw new Error("DUI Gemini failed");
+}
+
+    // ── 5. Verify logic ──────────────────────────────────
+    console.log("========== DEED ==========");
+    console.log(deedJson);
+
+    console.log("========== EXCERPT ==========");
+    console.log(excerptJson);
+
+    console.log("========== DUI ==========");
+    console.log(duiJson);
+    const verification = await verifyProperty(
+      deedJson,
+      excerptJson,
+      duiJson
+    );
+
+    console.log("VERIFICATION:", verification);
+
+    clearInterval(progressInterval);
     setOcrProgress(100);
 
     setTimeout(() => {
-      setVerifyState("verified");
+      setVerifyState(verification.verified ? "verified" : "unverified");
     }, 300);
 
   } catch (error) {
-    console.error(error);
+    console.error("HANDLE SUBMIT ERROR:", error);
 
     clearInterval(progressInterval);
-
     setOcrProgress(100);
     setVerifyState("unverified");
   }
 };
-
   if (!isOpen) return null;
 
   return (
