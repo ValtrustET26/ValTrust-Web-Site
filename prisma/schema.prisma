@@ -38,6 +38,7 @@ model User {
   favorites     Favorite[]
   notifications Notification[]
   verifications Verification[]
+  testimonials     Testimonial[]
 }
 
 model Property {
@@ -114,6 +115,8 @@ model Favorite {
   property   Property @relation(fields: [propertyId], references: [id])
 
   @@unique([userId, propertyId])
+
+  
 }
 
 model Notification {
@@ -126,4 +129,18 @@ model Notification {
 
   user      User     @relation(fields: [userId], references: [id])
 }
+
+model Testimonial {
+id        String   @id @default(uuid())
+userId    String
+role      Role
+comment   String
+rating    Int
+createdAt DateTime @default(now())
+
+user      User     @relation(fields: [userId], references: [id])
+}
+
+
+
 
