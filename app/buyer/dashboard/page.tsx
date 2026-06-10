@@ -200,7 +200,7 @@ DashboardPage(){
                         <p className="text-xs md:truncate">{purchase.property}</p>
                     </div>
 
-                    <div className="flex justify-between md:block">
+                    <div className="flex justify-between md:block mt-2">
                         <span className="text-gray-400 text-xs md:hidden">
                          Status:
                         </span>
@@ -210,11 +210,11 @@ DashboardPage(){
                         </span>
                     </div>
 
-                    <p className="text-xs">
+                    <p className="text-xs mt-3">
                         <span className="text-gray-400 md:hidden">Date: </span>
                         {purchase.date}
                     </p>
-                    <p className="text-xs">
+                    <p className="text-xs mt-3">
                         <span className="text-gray-400 md:hidden">Price: </span>
                         {purchase.price}
                     </p>
