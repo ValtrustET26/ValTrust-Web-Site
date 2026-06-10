@@ -176,11 +176,11 @@ DashboardPage(){
 
                 <div className="overflow-x-auto">
                 <div className="hidden md:grid grid-cols-5 pb-2 border-b border-gray-500 text-gray-300 text-sm">
-                    <p>Properties</p>
-                    <p>Status</p>
-                    <p>Date</p>
-                    <p>Price</p>
-                    <p>Actions</p>
+                    <p className="ml-10">Properties</p>
+                    <p className="ml-60">Status</p>
+                    <p className="ml-45">Date</p>
+                    <p className="ml-32">Price</p>
+                    <p className="ml-14">Actions</p>
                 </div>
 
                 {purchases.map((purchase) => (
